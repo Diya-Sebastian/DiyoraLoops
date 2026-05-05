@@ -85,8 +85,8 @@ DATABASES = {
         # 'NAME': BASE_DIR / 'db.sqlite3',
            'ENGINE': 'django.db.backends.mysql',
            'NAME': 'diyoraloops_db',
-           'USER': 'root',
-           'PASSWORD': 'diya@user', # Update this
+           'USER': 'admin',
+           'PASSWORD': 'admin*#diyoraloops', 
            'HOST': 'localhost',
            'PORT': '3306',
     }
