@@ -59,7 +59,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'crochet_store_db',
-        'USER': 'root',
+        'USER': 'admin',
         'PASSWORD': 'diya@user',
         'HOST': 'diyora-loops-db.clu8ao64c3fc.ap-south-2.rds.amazonaws.com',
         'PORT': '3306',
