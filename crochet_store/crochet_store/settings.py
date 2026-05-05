@@ -7,7 +7,7 @@ SECRET_KEY = 'django-insecure-dummy-secret-key-change-in-prod'
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['16.112.129.193', 'localhost', '127.0.0.1', '*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
