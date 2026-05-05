@@ -61,7 +61,7 @@ DATABASES = {
         'NAME': 'crochet_store_db',
         'USER': 'root',
         'PASSWORD': 'diya@user',
-        'HOST': 'localhost',
+        'HOST': 'diyora-loops-db.clu8ao64c3fc.ap-south-2.rds.amazonaws.com',
         'PORT': '3306',
     }
 }
