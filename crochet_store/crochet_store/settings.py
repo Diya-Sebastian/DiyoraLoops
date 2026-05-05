@@ -58,7 +58,7 @@ WSGI_APPLICATION = 'crochet_store.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'diyora-loops-db',
+        'NAME': 'diyora_loops_db',
         'USER': 'admin',
         'PASSWORD': 'admin*#diyoraloops',
         'HOST': 'diyora-loops-db.clu8ao64c3fc.ap-south-2.rds.amazonaws.com',
