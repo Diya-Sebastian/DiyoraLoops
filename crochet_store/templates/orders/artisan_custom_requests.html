@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 mb-4">
+            <div class="list-group shadow-sm">
+                <a href="{% url 'orders:artisan_dashboard' %}" class="list-group-item list-group-item-action"><i class="fas fa-chart-line me-2"></i> Dashboard</a>
+                <a href="{% url 'orders:artisan_custom_requests' %}" class="list-group-item list-group-item-action active"><i class="fas fa-envelope-open-text me-2"></i> Custom Requests</a>
+                <a href="#" class="list-group-item list-group-item-action"><i class="fas fa-box me-2"></i> Manage Products</a>
+                <a href="#" class="list-group-item list-group-item-action"><i class="fas fa-clipboard-list me-2"></i> All Orders</a>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <h2 class="mb-4">New Custom Requests</h2>
+            
+            {% if requests %}
+                <div class="list-group shadow-sm">
+                {% for req in requests %}
+                    <div class="list-group-item flex-column align-items-start mb-3 border-0 border-bottom">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">From: {{ req.user_id.username }} | Category: {{ req.get_category_display }}</h5>
+                            <small>{{ req.created_at|timesince }} ago</small>
+                        </div>
+                        <p class="mb-1"><strong>Details:</strong> {{ req.message }}</p>
+                        <p class="mb-1"><strong>Colors:</strong> {{ req.colors }} | <strong>Size:</strong> {{ req.size }}</p>
+                        
+                        {% if req.reference_image %}
+                            <div class="mt-2 mb-3">
+                                <a href="{{ req.reference_image.url }}" target="_blank" class="text-info"><i class="fas fa-image"></i> View Reference Image</a>
+                            </div>
+                        {% endif %}
+                        
+                        <form class="row g-3 mt-2 align-items-center" method="post" action="#">
+                            {% csrf_token %}
+                            <input type="hidden" name="order_id" value="{{ req.order_id }}">
+                            <div class="col-auto">
+                                <label class="visually-hidden">Price</label>
+                                <div class="input-group">
+                                    <div class="input-group-text">₹</div>
+                                    <input type="number" class="form-control" placeholder="Quote Price" name="price" required>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-success">Set Price & Accept</button>
+                                <button type="button" class="btn btn-danger">Reject</button>
+                            </div>
+                        </form>
+                    </div>
+                {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info">No new custom requests at the moment.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

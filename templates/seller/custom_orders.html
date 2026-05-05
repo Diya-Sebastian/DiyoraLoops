@@ -1,0 +1,101 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Custom Requests | Seller{% endblock %}
+
+{% block content %}
+<h2 style="margin-bottom: 2rem;">Custom Crochet Requests</h2>
+
+<div class="glass-panel table-container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Req ID</th>
+                <th>Customer</th>
+                <th>Request Details</th>
+                <th>Date</th>
+                <th>Quoted Price</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in custom_orders %}
+            <tr>
+                <td>#{{ item.id }}</td>
+                <td>{{ item.customer.username }}</td>
+                <td style="max-width: 250px;">
+                    <p style="margin:0; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ item.request_description }}">
+                        {{ item.request_description }}
+                    </p>
+                    {% if item.reference_image %}
+                        <a href="{{ item.reference_image.url }}" target="_blank" style="font-size: 0.8rem; color: var(--secondary-color);">View Ref Image</a>
+                    {% endif %}
+                </td>
+                <td>{{ item.date_requested|date:"M d, Y" }}</td>
+                
+                <td>
+                    {% if item.quoted_price %}
+                        ${{ item.quoted_price }}
+                    {% else %}
+                        <form method="POST" style="display:flex; gap:0.5rem; align-items:center; margin:0;">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="quote">
+                            <input type="hidden" name="order_id" value="{{ item.id }}">
+                            <input type="number" step="0.01" name="quoted_price" class="form-control" style="width: 80px; padding: 0.2rem;" placeholder="Price" required>
+                            <button type="submit" class="btn btn-outline" style="padding: 0.2rem 0.5rem;">Quote</button>
+                        </form>
+                    {% endif %}
+                </td>
+                
+                <td>
+                    {% if not item.is_accepted and item.quoted_price %}
+                        <span class="badge badge-pending">Waiting to Accept</span>
+                    {% elif not item.quoted_price %}
+                        <span class="badge badge-warning">Needs Quote</span>
+                    {% else %}
+                        <span class="badge badge-primary">{{ item.status }}</span>
+                    {% endif %}
+                </td>
+                
+                <td>
+                    {% if not item.is_accepted and item.quoted_price %}
+                        <form method="POST" style="margin:0;">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="accept">
+                            <input type="hidden" name="order_id" value="{{ item.id }}">
+                            <button type="submit" class="btn btn-success" style="padding: 0.2rem 0.6rem;">Accept Order</button>
+                        </form>
+                    {% elif item.is_accepted %}
+                        <form method="POST" style="display:flex; gap:0.5rem; align-items:center; margin:0;">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="status_update">
+                            <input type="hidden" name="order_id" value="{{ item.id }}">
+                            <select name="status" class="form-control" style="padding: 0.2rem; width: auto;">
+                                <option value="Design Planning" {% if item.status == 'Design Planning' %}selected{% endif %}>Design Planning</option>
+                                <option value="Crocheting" {% if item.status == 'Crocheting' %}selected{% endif %}>Crocheting</option>
+                                <option value="Finishing" {% if item.status == 'Finishing' %}selected{% endif %}>Finishing</option>
+                                <option value="Packed" {% if item.status == 'Packed' %}selected{% endif %}>Packed</option>
+                                <option value="Shipped" {% if item.status == 'Shipped' %}selected{% endif %}>Shipped</option>
+                                <option value="Delivered" {% if item.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                                <option value="Cancelled" {% if item.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary" style="padding: 0.2rem 0.5rem;">Update</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" style="text-align: center; color: var(--text-secondary);">No custom requests found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .badge-pending { background-color: var(--warning); color: #B45309; }
+    .badge-success { background-color: var(--success); color: #064E3B; }
+    .badge-primary { background-color: var(--primary-color); color: white; }
+    .btn-success { background-color: var(--success); color: #064E3B; border: none; }
+</style>
+{% endblock %}

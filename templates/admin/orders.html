@@ -1,0 +1,58 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Orders | Admin{% endblock %}
+
+{% block content %}
+<h2 style="margin-bottom: 2rem;">Manage All Orders</h2>
+
+<div class="glass-panel table-container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Current Status</th>
+                <th>Update Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ order.customer.username }}</td>
+                <td>${{ order.get_cart_total }}</td>
+                <td>
+                    <span class="badge 
+                        {% if order.status == 'Pending' %}badge-pending
+                        {% elif order.status == 'Delivered' %}badge-success
+                        {% else %}badge-primary{% endif %}">
+                        {{ order.status }}
+                    </span>
+                </td>
+                <td>
+                    <form method="POST" style="display:flex; gap:0.5rem; align-items:center;">
+                        {% csrf_token %}
+                        <input type="hidden" name="order_id" value="{{ order.id }}">
+                        <select name="status" class="form-control" style="padding: 0.3rem; height: auto;">
+                            <option value="Order Placed" {% if order.status == 'Order Placed' %}selected{% endif %}>Order Placed</option>
+                            <option value="Design Planning" {% if order.status == 'Design Planning' %}selected{% endif %}>Design Planning</option>
+                            <option value="Crocheting" {% if order.status == 'Crocheting' %}selected{% endif %}>Crocheting</option>
+                            <option value="Finishing" {% if order.status == 'Finishing' %}selected{% endif %}>Finishing</option>
+                            <option value="Packed" {% if order.status == 'Packed' %}selected{% endif %}>Packed</option>
+                            <option value="Shipped" {% if order.status == 'Shipped' %}selected{% endif %}>Shipped</option>
+                            <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                            <option value="Cancelled" {% if order.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                        </select>
+                        <button type="submit" class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; border-color: var(--primary-color);">Update</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; color: var(--text-secondary);">No active orders.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Edit Product | Seller{% endblock %}
+
+{% block content %}
+<div class="glass-panel" style="max-width: 600px; margin: 2rem auto; padding: 2rem;">
+    <h3 style="margin-bottom: 1.5rem;">Edit {{ product.title }}</h3>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div style="margin-bottom: 2rem;">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" style="width: 100px; height: 100px; object-fit: cover; border-radius: var(--radius-sm); margin-bottom: 1rem;">
+            {% endif %}
+            {{ form.as_p }}
+        </div>
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn btn-primary" style="flex: 1;">Update Product</button>
+            <a href="{% url 'seller_products' %}" class="btn btn-outline" style="flex: 1; text-align: center;">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

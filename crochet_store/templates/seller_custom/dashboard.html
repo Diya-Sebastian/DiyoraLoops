@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block title %}Seller Dashboard | Stitched Warmth{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-white sidebar collapse shadow-sm" style="min-height: 100vh; position: sticky; top: 0;">
+            <div class="position-sticky pt-4 px-3">
+                <div class="text-center mb-4 pb-3 border-bottom">
+                    <h4 class="fw-bold text-purple"><i class="fas fa-yarn me-2"></i>Artisan Studio</h4>
+                </div>
+                <ul class="nav flex-column nav-pills">
+                    <li class="nav-item mb-2">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'seller_custom:dashboard' %}">
+                            <i class="fas fa-th-large me-2"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'manage_products' %}active{% endif %}" href="{% url 'seller_custom:manage_products' %}">
+                            <i class="fas fa-box me-2"></i>My Products
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'view_orders' %}active{% endif %}" href="{% url 'seller_custom:view_orders' %}">
+                            <i class="fas fa-shopping-bag me-2"></i>Received Orders
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'custom_requests' %}active{% endif %}" href="{% url 'seller_custom:custom_requests' %}">
+                            <i class="fas fa-magic me-2"></i>Custom Requests
+                        </a>
+                    </li>
+                    <li class="nav-item mt-4 border-top pt-3">
+                        <a class="nav-link text-danger" href="{% url 'users:logout' %}">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 bg-light">
+            <!-- Topbar -->
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom bg-white px-3 mt-3 rounded shadow-sm">
+                <h1 class="h4 fw-bold mb-0">Stitched Warmth</h1>
+                <div class="d-flex align-items-center">
+                    <span class="text-muted me-3">Welcome, <strong>{{ request.user.username }}</strong> (Artisan)</span>
+                    <button class="btn btn-sm btn-outline-purple d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% block seller_content %}
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm text-center p-4 h-100">
+                        <div class="bg-purple-light rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <i class="fas fa-box fa-lg text-purple"></i>
+                        </div>
+                        <h2 class="fw-bold">{{ products_count }}</h2>
+                        <p class="text-muted mb-0">Active Products</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm text-center p-4 h-100">
+                        <div class="bg-primary-light rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <i class="fas fa-shopping-cart fa-lg text-primary"></i>
+                        </div>
+                        <h2 class="fw-bold">{{ orders_count }}</h2>
+                        <p class="text-muted mb-0">Total Orders</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm text-center p-4 h-100">
+                        <div class="bg-info-light rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <i class="fas fa-magic fa-lg text-info"></i>
+                        </div>
+                        <h2 class="fw-bold">{{ custom_requests_count }}</h2>
+                        <p class="text-muted mb-0">Custom Requests</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm p-4">
+                <h5 class="fw-bold mb-4">Quick Actions</h5>
+                <div class="d-flex gap-3">
+                    <a href="{% url 'seller_custom:manage_products' %}" class="btn btn-purple px-4 py-2">Add New Product</a>
+                    <a href="{% url 'seller_custom:custom_requests' %}" class="btn btn-outline-purple px-4 py-2">Check Requests</a>
+                </div>
+            </div>
+            {% endblock %}
+        </main>
+    </div>
+</div>
+
+<style>
+    :root {
+        --purple-color: #6f42c1;
+        --purple-light: rgba(111, 66, 193, 0.1);
+    }
+    .text-purple { color: var(--purple-color); }
+    .btn-purple { background-color: var(--purple-color); color: white; border: none; }
+    .btn-purple:hover { background-color: #59359a; color: white; }
+    .btn-outline-purple { color: var(--purple-color); border: 1px solid var(--purple-color); }
+    .btn-outline-purple:hover { background-color: var(--purple-color); color: white; }
+    .bg-purple-light { background-color: var(--purple-light); }
+    .bg-primary-light { background-color: rgba(13, 110, 253, 0.1); }
+    .bg-info-light { background-color: rgba(13, 202, 240, 0.1); }
+
+    #sidebarMenu .nav-link {
+        color: #495057;
+        font-weight: 500;
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        transition: all 0.2s;
+    }
+    #sidebarMenu .nav-link:hover {
+        background-color: #f8f9fa;
+        color: var(--purple-color);
+    }
+    #sidebarMenu .nav-link.active {
+        background-color: var(--purple-color) !important;
+        color: white !important;
+    }
+</style>
+{% endblock %}

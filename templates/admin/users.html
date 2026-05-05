@@ -1,0 +1,61 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}User Management | Admin{% endblock %}
+
+{% block content %}
+<h2 style="margin-bottom: 2rem;">Manage Users</h2>
+
+<div class="grid-3" style="margin-bottom: 2rem;">
+    <!-- Add User Form -->
+    <div class="glass-panel" style="padding: 1.5rem;">
+        <h3 style="margin-bottom: 1.5rem;">Add New User</h3>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Create User</button>
+        </form>
+    </div>
+
+    <!-- Users Table -->
+    <div class="glass-panel table-container" style="grid-column: span 2;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr>
+                    <td>{{ u.id }}</td>
+                    <td>{{ u.username }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>
+                        <span class="badge 
+                            {% if u.role == 'ADMIN' %}badge-primary
+                            {% elif u.role == 'SELLER' %}badge-warning
+                            {% else %}badge-success{% endif %}">
+                            {{ u.role }}
+                        </span>
+                    </td>
+                    <td>
+                        <form method="POST" style="margin:0;">
+                            {% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ u.id }}">
+                            <button type="submit" name="delete" class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="return confirm('Delete this user?');">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align: center;">No users found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

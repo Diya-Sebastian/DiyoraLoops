@@ -1,0 +1,88 @@
+{% extends 'admin_custom/dashboard.html' %}
+
+{% block admin_content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Sales & User Analytics</h1>
+</div>
+
+<div class="row g-4">
+    <!-- Sales Chart -->
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold">Sales Trend (Last 30 Days)</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="salesChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Distribution Chart -->
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold">User Distribution</h5>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center">
+                <canvas id="userChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Sales Chart
+        const salesChartElement = document.getElementById('salesChart');
+        if (salesChartElement) {
+            const salesCtx = salesChartElement.getContext('2d');
+            new Chart(salesCtx, {
+                type: 'line',
+                data: {
+                    labels: {{ dates_json|safe|default:"[]" }},
+                    datasets: [{
+                        label: 'Revenue (₹)',
+                        data: {{ amounts_json|safe|default:"[]" }},
+                        borderColor: '#d63384',
+                        backgroundColor: 'rgba(214, 51, 132, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+        }
+
+        // User Chart
+        const userChartElement = document.getElementById('userChart');
+        if (userChartElement) {
+            const userCtx = userChartElement.getContext('2d');
+            new Chart(userCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Customers', 'Sellers'],
+                    datasets: [{
+                        data: {{ user_counts|safe|default:"[0, 0]" }},
+                        backgroundColor: ['#0d6efd', '#ffc107'],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

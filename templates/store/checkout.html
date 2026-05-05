@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Checkout | DiyoraLoops{% endblock %}
+
+{% block content %}
+<div class="grid-3">
+    <div style="grid-column: span 2;">
+        <div class="glass-panel" style="padding: 2rem;">
+            <h2>Shipping Information</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" value="{{ request.user.first_name }} {{ request.user.last_name }}" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Address</label>
+                    <input type="text" class="form-control" value="{{ request.user.customer_profile.address|default:'' }}" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone</label>
+                    <input type="text" class="form-control" value="{{ request.user.customer_profile.phone|default:'' }}" required>
+                </div>
+                <hr style="border-color: var(--glass-border); margin: 2rem 0;">
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">Payment will be Cash on Delivery for this demo application.</p>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Complete Order</button>
+            </form>
+        </div>
+    </div>
+    
+    <div>
+        <div class="glass-panel" style="padding: 2rem; position: sticky; top: 100px;">
+            <h3>Order Summary</h3>
+            <hr style="border-color: var(--glass-border); margin: 1rem 0;">
+            
+            {% for item in items %}
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; align-items: center;">
+                <div>
+                    <p style="font-weight: 500;">{{ item.product.title }}</p>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Qty: {{ item.quantity }}</p>
+                </div>
+                <p>${{ item.get_total }}</p>
+            </div>
+            {% endfor %}
+            
+            <hr style="border-color: var(--glass-border); margin: 1rem 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h4>Total Items</h4>
+                <p>{{ order.get_cart_items }}</p>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+                <h4>Grand Total</h4>
+                <h3 class="product-price">${{ order.get_cart_total }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

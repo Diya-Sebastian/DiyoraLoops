@@ -1,0 +1,53 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Dashboard | Seller{% endblock %}
+
+{% block content %}
+<h2 style="margin-bottom: 2rem;">Seller Dashboard</h2>
+
+<div class="stats-grid">
+    <div class="glass-panel stat-card">
+        <h4 style="color: var(--text-secondary);">My Products</h4>
+        <div class="stat-value text-gradient">{{ my_products_count }}</div>
+    </div>
+</div>
+
+<h3 style="margin-bottom: 1.5rem;">Low Stock Alerts</h3>
+<div class="grid-4" style="margin-bottom: 3rem;">
+    {% for product in low_stock %}
+    <div class="glass-panel" style="padding: 1.5rem; border-color: rgba(239, 68, 68, 0.5);">
+        <h4>{{ product.title }}</h4>
+        <p style="color: var(--danger); font-weight: bold; margin-top: 0.5rem;">Only {{ product.stock }} left!</p>
+    </div>
+    {% empty %}
+    <p style="color: var(--text-secondary);">All products have sufficient stock.</p>
+    {% endfor %}
+</div>
+
+<h3 style="margin-bottom: 1.5rem;">Recent Orders for My Products</h3>
+<div class="glass-panel table-container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Subtotal</th>
+                <th>Order Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in recent_orders %}
+            <tr>
+                <td>{{ item.product.title }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ item.get_total }}</td>
+                <td>{{ item.order.date_ordered|date:"M d, Y" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center; color: var(--text-secondary);">No orders received yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

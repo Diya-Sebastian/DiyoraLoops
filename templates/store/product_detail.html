@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.title }} | DiyoraLoops{% endblock %}
+
+{% block content %}
+<div class="grid-3 glass-panel" style="overflow: hidden; padding: 0;">
+    <div style="grid-column: span 1; background: rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; min-height: 400px;">
+        {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.title }}" style="width: 100%; height: 100%; object-fit: cover;">
+        {% else %}
+            <span style="color: var(--text-secondary);">No Image</span>
+        {% endif %}
+    </div>
+    
+    <div style="grid-column: span 2; padding: 3rem;">
+        <span class="badge badge-pending" style="margin-bottom: 1rem; display: inline-block;">{{ product.category.name }}</span>
+        <h1 class="text-gradient" style="font-size: 2.5rem; margin-bottom: 0.5rem;">{{ product.title }}</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">By Seller: {{ product.seller.username }}</p>
+        
+        <h2 class="product-price" style="font-size: 2rem; margin-bottom: 2rem;">${{ product.price }}</h2>
+        
+        <p style="margin-bottom: 2rem; line-height: 1.8;">{{ product.description }}</p>
+        
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            {% if product.stock > 0 and request.user.role != 'ADMIN' and request.user.role != 'SELLER' %}
+                <button data-product="{{ product.id }}" data-action="add" class="btn btn-outline update-cart" style="flex: 1; padding: 1rem; font-size: 1.1rem; border: 2px solid var(--primary-color);">Add to Cart</button>
+                <button data-product="{{ product.id }}" data-action="add" class="btn btn-primary" onclick="buyNow(this)" style="flex: 1; padding: 1rem; font-size: 1.1rem;">Buy Now</button>
+            {% elif request.user.role == 'ADMIN' or request.user.role == 'SELLER' %}
+                <p style="color: var(--warning);">Admin/Sellers cannot purchase items.</p>
+            {% else %}
+                <button class="btn btn-danger" disabled style="flex: 1; padding: 1rem; font-size: 1.1rem; opacity: 0.7;">Out of Stock</button>
+            {% endif %}
+        </div>
+        
+        <script>
+            function buyNow(btn) {
+                var productId = btn.dataset.product;
+                var action = btn.dataset.action;
+                if (user === 'AnonymousUser'){
+                    window.location.href = "{% url 'login' %}?next={% url 'cart' %}";
+                } else {
+                    // Call the add to cart logic, but instead of reloading safely alert and redirect
+                    fetch('/update_item/', {
+                        method:'POST',
+                        headers:{
+                            'Content-Type':'application/json',
+                            'X-CSRFToken':csrftoken,
+                        }, 
+                        body:JSON.stringify({'productId':productId, 'action':action})
+                    })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        alert("Order placed successfully!");
+                        window.location.href = "{% url 'checkout' %}";
+                    });
+                }
+            }
+        </script>
+        
+        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--glass-border);">
+            <p style="color: var(--text-secondary);">Stock Available: <span style="color: var(--text-primary); font-weight: bold;">{{ product.stock }} items</span></p>
+        </div>
+    </div>
+</div>
+
+<div class="glass-panel" style="margin-top: 2rem; padding: 2rem;">
+    <h3 style="margin-bottom: 2rem;">Customer Reviews</h3>
+    
+    <div style="margin-bottom: 3rem;">
+        {% for review in product.reviews.all %}
+            <div style="border-bottom: 1px solid var(--glass-border); padding-bottom: 1rem; margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <strong>{{ review.customer.username }}</strong>
+                    <span style="color: #F59E0B;">
+                        {% if review.rating == 5 %}★★★★★{% elif review.rating == 4 %}★★★★☆{% elif review.rating == 3 %}★★★☆☆{% elif review.rating == 2 %}★★☆☆☆{% else %}★☆☆☆☆{% endif %}
+                    </span>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; margin: 0;">{{ review.comment }}</p>
+            </div>
+        {% empty %}
+            <p style="color: var(--text-secondary);">No reviews yet. Be the first to review!</p>
+        {% endfor %}
+    </div>
+
+    {% if request.user.is_authenticated and request.user.role == 'CUSTOMER' %}
+    <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 8px;">
+        <h4 style="margin-bottom: 1rem;">Write a Review</h4>
+        <form method="POST" action="{% url 'add_review' product.id %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Rating</label>
+                <select name="rating" class="form-control" style="max-width: 200px;">
+                    <option value="5">5 - Excellent</option>
+                    <option value="4">4 - Very Good</option>
+                    <option value="3">3 - Good</option>
+                    <option value="2">2 - Fair</option>
+                    <option value="1">1 - Poor</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Comment</label>
+                <textarea name="comment" class="form-control" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'admin_custom/dashboard.html' %}
+
+{% block admin_content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Manage Orders</h1>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover shadow-sm border rounded">
+        <thead class="table-light">
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td><small class="text-muted">#{{ order.order_id|stringformat:".8s" }}</small></td>
+                <td>{{ order.user.username }}</td>
+                <td class="fw-bold">₹{{ order.total_amount }}</td>
+                <td>
+                    <span class="badge bg-{{ order.status|yesno:'info,secondary' }}">
+                        {{ order.get_status_display }}
+                    </span>
+                </td>
+                <td>{{ order.created_at|date:"M d, Y" }}</td>
+                <td>
+                    <a href="#" class="btn btn-sm btn-outline-primary">View</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center py-4 text-muted">No orders found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

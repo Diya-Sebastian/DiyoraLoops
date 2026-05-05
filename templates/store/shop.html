@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Shop | DiyoraLoops{% endblock %}
+
+{% block content %}
+<div style="display: flex; gap: 2rem; align-items: baseline; margin-bottom: 2rem;">
+    <h2>Our Collection</h2>
+    
+    <div style="margin-left: auto;">
+        <form method="GET" style="display: flex; gap: 1rem;">
+            <select name="category" class="form-control" style="width: 200px;">
+                <option value="">All Categories</option>
+                {% for c in categories %}
+                <option value="{{ c.id }}" {% if request.GET.category == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-outline">Filter</button>
+        </form>
+    </div>
+</div>
+
+<div class="grid-4">
+    {% for product in products %}
+    <div class="product-card glass-panel">
+        <div class="product-image">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.title }}" style="width: 100%; height: 100%; object-fit: cover;">
+            {% else %}
+                <span>No Image</span>
+            {% endif %}
+        </div>
+        <div class="product-info">
+            <h4>{{ product.title }}</h4>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <p class="product-price">${{ product.price }}</p>
+                {% if product.stock > 0 %}
+                    <span class="badge badge-success">In Stock</span>
+                {% else %}
+                    <span class="badge badge-danger">Out of Stock</span>
+                {% endif %}
+            </div>
+            
+            <div style="display: flex; gap: 0.5rem; justify-content: space-between;">
+                <a href="{% url 'product_detail' product.id %}" class="btn btn-outline" style="flex: 1; padding: 0.5rem;">View</a>
+                {% if product.stock > 0 and request.user.role != 'ADMIN' and request.user.role != 'SELLER' %}
+                <button data-product="{{ product.id }}" data-action="add" class="btn btn-primary update-cart" style="flex: 1; padding: 0.5rem;">Add</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 0;">
+        <h3 style="color: var(--text-secondary);">No products found in this category.</h3>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard | DiyoraLoops{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="dashboard-layout">
+    
+    <aside class="sidebar">
+        <h3 class="text-gradient" style="margin-bottom: 2rem;">DiyoraLoops Admin</h3>
+        <nav class="sidebar-nav">
+            {% if request.user.role == 'ADMIN' or request.user.is_superuser %}
+                <a href="{% url 'admin_dashboard' %}" class="sidebar-link">Admin Dashboard</a>
+                <a href="{% url 'admin_products' %}" class="sidebar-link">Manage Products</a>
+                <a href="{% url 'admin_categories' %}" class="sidebar-link">Manage Categories</a>
+                <a href="{% url 'admin_orders' %}" class="sidebar-link">Manage Orders</a>
+            {% elif request.user.role == 'SELLER' %}
+                <a href="{% url 'seller_dashboard' %}" class="sidebar-link">Seller Dashboard</a>
+                <a href="{% url 'seller_products' %}" class="sidebar-link">Manage Products</a>
+                <a href="{% url 'seller_orders' %}" class="sidebar-link">View Orders</a>
+            {% endif %}
+            <hr style="border-color: var(--glass-border); margin: 1rem 0;">
+            <a href="{% url 'home' %}" class="sidebar-link">View Storefront</a>
+            <form method="POST" action="{% url 'logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline" style="width: 100%; text-align: left; background: transparent; border: none; padding: 0.75rem 1rem; color: var(--danger);">Logout</button>
+            </form>
+        </nav>
+    </aside>
+
+    <main class="dashboard-content">
+        {% block content %}
+        {% endblock content %}
+    </main>
+
+</body>
+</html>

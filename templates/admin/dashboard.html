@@ -1,0 +1,93 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Dashboard | Admin{% endblock %}
+
+{% block content %}
+<h2 style="margin-bottom: 2rem;">Overview</h2>
+
+<div class="stats-grid">
+    <div class="glass-panel stat-card">
+        <h4 style="color: var(--text-secondary);">Total Revenue</h4>
+        <div class="stat-value text-gradient">${{ revenue }}</div>
+    </div>
+    <div class="glass-panel stat-card">
+        <h4 style="color: var(--text-secondary);">Total Orders</h4>
+        <div class="stat-value">{{ total_orders }}</div>
+    </div>
+    <div class="glass-panel stat-card">
+        <h4 style="color: var(--text-secondary);">Products</h4>
+        <div class="stat-value">{{ total_products }}</div>
+    </div>
+    <div class="glass-panel stat-card">
+        <h4 style="color: var(--text-secondary);">Customers</h4>
+        <div class="stat-value">{{ total_customers }}</div>
+    </div>
+</div>
+
+<div class="glass-panel" style="padding: 1.5rem; margin-bottom: 2rem;">
+    <h3 style="margin-bottom: 1.5rem;">Revenue Analytics Breakdown</h3>
+    <canvas id="revenueChart" style="max-height: 300px; width: 100%;"></canvas>
+</div>
+
+<h3 style="margin-bottom: 1.5rem;">Recent Orders</h3>
+<div class="glass-panel table-container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in recent_orders %}
+            <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ order.customer.username }}</td>
+                <td>${{ order.get_cart_total }}</td>
+                <td>
+                    <span class="badge 
+                        {% if order.status == 'Pending' %}badge-pending
+                        {% elif order.status == 'Delivered' %}badge-success
+                        {% else %}badge-primary{% endif %}">
+                        {{ order.status }}
+                    </span>
+                </td>
+                <td>{{ order.date_ordered|date:"M d, Y" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; color: var(--text-secondary);">No completed orders yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    const revenueChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ chart_labels|safe }},
+            datasets: [{
+                label: 'Revenue ($)',
+                data: {{ chart_data|safe }},
+                backgroundColor: 'rgba(244, 114, 182, 0.7)',
+                borderColor: '#F472B6',
+                borderWidth: 1,
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

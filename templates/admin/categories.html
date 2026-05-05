@@ -1,0 +1,49 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Categories | Admin{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2>Manage Categories</h2>
+    <button onclick="document.getElementById('add-modal').style.display='block'" class="btn btn-primary">+ Add Category</button>
+</div>
+
+<!-- Modal -->
+<div id="add-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000;">
+    <div class="glass-panel" style="max-width: 500px; margin: 4rem auto; padding: 2rem; position: relative;">
+        <span onclick="document.getElementById('add-modal').style.display='none'" style="position: absolute; right: 1rem; top: 1rem; cursor: pointer; color: var(--text-secondary);">&times; Close</span>
+        <h3 style="margin-bottom: 1.5rem;">Add New Category</h3>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Save</button>
+        </form>
+    </div>
+</div>
+
+<div class="glass-panel table-container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Slug</th>
+                <th>Description</th>
+                <th>Products Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cat in categories %}
+            <tr>
+                <td>{{ cat.name }}</td>
+                <td>{{ cat.slug }}</td>
+                <td>{{ cat.description|truncatechars:50 }}</td>
+                <td>{{ cat.products.count }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center; color: var(--text-secondary);">No categories found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

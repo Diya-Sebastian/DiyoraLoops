@@ -1,0 +1,26 @@
+{% extends 'admin_custom/dashboard.html' %}
+
+{% block admin_content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">View Products</h1>
+</div>
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for p in products %}
+    <div class="col">
+        <div class="card shadow-sm h-100 border-0">
+            {% if p.image %}
+                <img src="{{ p.image.url }}" class="card-img-top" alt="{{ p.name }}" style="height: 200px; object-fit: cover;">
+            {% else %}
+                <div class="bg-light text-center py-5"><i class="fas fa-image fa-3x text-muted"></i></div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title fw-bold text-primary">{{ p.name }}</h5>
+                <p class="card-text text-muted mb-1"><strong>Price:</strong> ₹{{ p.price }}</p>
+                <p class="card-text text-muted mb-1"><strong>Category:</strong> {{ p.get_category_display }}</p>
+                <p class="card-text text-muted small"><strong>Seller:</strong> {{ p.seller.username }}</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

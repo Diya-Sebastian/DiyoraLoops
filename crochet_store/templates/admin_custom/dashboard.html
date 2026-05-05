@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard | DiyoraLoops{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm px-4">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#"><i class="fas fa-yarn me-2"></i>Stitched Warmth Admin</a>
+        <div class="ms-auto d-flex align-items-center text-white">
+            <span class="me-3"><i class="fas fa-user-circle me-1"></i>Logged in as: <strong>{{ user.username }}</strong></span>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Toggle Button (Mobile) -->
+        <button class="btn btn-primary d-md-none m-2" type="button" data-bs-toggle="collapse" data-bs-target="#adminSidebar">
+            <i class="fas fa-bars"></i> Menu
+        </button>
+
+        <!-- Persistent Sidebar -->
+        <div class="col-md-3 col-lg-2 bg-white border-end collapse d-md-block" id="adminSidebar" style="min-height: 100vh; transition: all 0.3s;">
+            <div class="d-flex flex-column p-3">
+                <h5 class="text-primary fw-bold mb-4 mt-2"><i class="fas fa-tools me-2"></i>Admin Menu</h5>
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a href="{% url 'admin_custom:dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% else %}link-dark{% endif %} mb-2">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'admin_custom:manage_users' %}" class="nav-link {% if request.resolver_match.url_name == 'manage_users' %}active{% else %}link-dark{% endif %} mb-2">
+                            <i class="fas fa-users me-2"></i>Manage Users
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'admin_custom:approve_sellers' %}" class="nav-link {% if request.resolver_match.url_name == 'approve_sellers' %}active{% else %}link-dark{% endif %} mb-2">
+                            <i class="fas fa-check-circle me-2"></i>Approve Sellers
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'admin_custom:manage_products' %}" class="nav-link {% if request.resolver_match.url_name == 'manage_products' %}active{% else %}link-dark{% endif %} mb-2">
+                            <i class="fas fa-box me-2"></i>Manage Products
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'admin_custom:view_orders' %}" class="nav-link {% if request.resolver_match.url_name == 'view_orders' %}active{% else %}link-dark{% endif %} mb-2">
+                            <i class="fas fa-shopping-cart me-2"></i>Manage Orders
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'admin_custom:sales_analytics' %}" class="nav-link {% if request.resolver_match.url_name == 'sales_analytics' %}active{% else %}link-dark{% endif %} mb-2">
+                            <i class="fas fa-chart-line me-2"></i>Sales Analytics
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'admin_custom:handle_disputes' %}" class="nav-link {% if request.resolver_match.url_name == 'handle_disputes' %}active{% else %}link-dark{% endif %} mb-2">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Handle Disputes
+                        </a>
+                    </li>
+                </ul>
+                <hr>
+                <a href="{% url 'users:logout' %}" class="btn btn-outline-danger btn-sm">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Display Area -->
+        <main class="col-md-9 col-lg-10 ms-sm-auto px-md-4 py-4">
+            {% block admin_content %}
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+                <h1 class="h2 text-dark">System Overview</h1>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="row row-cols-1 row-cols-md-4 g-4 mb-5">
+                <div class="col">
+                    <div class="card text-white bg-primary shadow-sm h-100 border-0">
+                        <div class="card-body text-center py-4">
+                            <h6 class="text-uppercase mb-2 opacity-75 small fw-bold">Total Users</h6>
+                            <h2 class="fw-bold mb-0">{{ total_users }}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card text-white bg-success shadow-sm h-100 border-0">
+                        <div class="card-body text-center py-4">
+                            <h6 class="text-uppercase mb-2 opacity-75 small fw-bold">Total Revenue</h6>
+                            <h2 class="fw-bold mb-0">₹{{ total_revenue }}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card text-white bg-info shadow-sm h-100 border-0">
+                        <div class="card-body text-center py-4">
+                            <h6 class="text-uppercase mb-2 opacity-75 small fw-bold">Products</h6>
+                            <h2 class="fw-bold mb-0">{{ total_products }}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card text-white bg-warning shadow-sm h-100 border-0">
+                        <div class="card-body text-center py-4">
+                            <h6 class="text-uppercase mb-2 opacity-75 small fw-bold">Orders</h6>
+                            <h2 class="fw-bold mb-0">{{ total_orders }}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 text-dark fw-bold">Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item px-0 py-3"><i class="fas fa-user-plus text-primary me-3"></i>New user registered: Diya</li>
+                        <li class="list-group-item px-0 py-3"><i class="fas fa-shopping-bag text-success me-3"></i>New order #ORD-9992</li>
+                        <li class="list-group-item px-0 py-3"><i class="fas fa-check-circle text-info me-3"></i>Seller "CraftyHands" approved</li>
+                    </ul>
+                </div>
+            </div>
+            {% endblock %}
+        </main>
+    </div>
+</div>
+
+<style>
+    .nav-pills .nav-link {
+        border-radius: 8px;
+        padding: 10px 15px;
+        transition: all 0.2s ease;
+    }
+    .nav-pills .nav-link.active {
+        background-color: var(--primary-color) !important;
+        color: white !important;
+    }
+    .nav-pills .nav-link.active:hover {
+        background-color: var(--primary-color);
+        color: white !important;
+        opacity: 0.9;
+    }
+    .nav-pills .nav-link:hover:not(.active) {
+        background-color: #f8f9fa;
+        color: var(--primary-color) !important;
+    }
+    #adminSidebar {
+        z-index: 100;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'admin_custom/dashboard.html' %}
+
+{% block admin_content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Approve Sellers</h1>
+</div>
+<div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Seller Name</th>
+                    <th>Email</th>
+                    <th>Date Joined</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in sellers %}
+                <tr>
+                    <td>{{ s.username }}</td>
+                    <td>{{ s.email }}</td>
+                    <td>{{ s.date_joined|date:"M d, Y" }}</td>
+                    <td>{% if s.is_active %}<span class="badge bg-success">Approved</span>{% else %}<span class="badge bg-warning text-dark">Pending</span>{% endif %}</td>
+                    <td>
+                        {% if not s.is_active %}
+                            <a href="{% url 'admin_custom:approve_seller' s.id %}" class="btn btn-sm btn-success"><i class="fas fa-check me-1"></i>Approve</a>
+                        {% else %}
+                            <a href="{% url 'admin_custom:toggle_user_status' s.id %}" class="btn btn-sm btn-outline-danger"><i class="fas fa-ban me-1"></i>Deactivate</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

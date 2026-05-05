@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 mb-4">
+            <div class="list-group shadow-sm">
+                <a href="{% url 'orders:artisan_dashboard' %}" class="list-group-item list-group-item-action active"><i class="fas fa-chart-line me-2"></i> Dashboard</a>
+                <a href="{% url 'orders:artisan_custom_requests' %}" class="list-group-item list-group-item-action"><i class="fas fa-envelope-open-text me-2"></i> Custom Requests</a>
+                <a href="#" class="list-group-item list-group-item-action"><i class="fas fa-box me-2"></i> Manage Products</a>
+                <a href="#" class="list-group-item list-group-item-action"><i class="fas fa-clipboard-list me-2"></i> All Orders</a>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <h2 class="mb-4">Artisan Dashboard</h2>
+            
+            <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+                <div class="col">
+                    <div class="card text-white bg-primary shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Pending Orders</h5>
+                            <p class="card-text display-4">5</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card text-white bg-success shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Revenue (Monthly)</h5>
+                            <p class="card-text display-4">₹12k</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card text-white bg-warning shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">New Requests</h5>
+                            <p class="card-text display-4">3</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h4>Recent Activity</h4>
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Order #1234 completed</li>
+                        <li class="mb-2"><i class="fas fa-info-circle text-info me-2"></i> New custom request received from Alice</li>
+                        <li><i class="fas fa-truck text-warning me-2"></i> Order #1230 shipped</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
