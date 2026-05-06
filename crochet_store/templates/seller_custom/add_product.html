@@ -20,6 +20,12 @@
                         <label class="form-label fw-bold text-secondary small text-uppercase mb-2">
                             {{ field.label }} {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
                         </label>
+                        {% if edit_mode and field.name == 'image' and field.value %}
+                            <div class="mb-2">
+                                <img src="{{ field.value.url }}" alt="Current Image" class="img-thumbnail" style="max-height: 150px;">
+                                <p class="small text-muted mt-1">Current Image</p>
+                            </div>
+                        {% endif %}
                         {{ field }}
                         {% if field.help_text %}
                             <div class="form-text small">{{ field.help_text }}</div>
