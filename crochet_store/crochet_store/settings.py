@@ -100,3 +100,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 # File Upload Settings (10MB limit)
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760
+
+# Authentication Redirects
+LOGIN_URL = 'users:login'
+LOGOUT_REDIRECT_URL = 'users:login'
