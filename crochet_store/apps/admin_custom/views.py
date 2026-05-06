@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from apps.users.models import User
 from apps.products.models import Product
-from apps.orders.models import Order
+from apps.orders.models import Order, Dispute
 from django.db.models import Sum
 
 def admin_required(view_func):
@@ -141,4 +141,16 @@ def sales_analytics(request):
 @login_required
 @admin_required
 def handle_disputes(request):
-    return render(request, 'admin_custom/disputes.html')
+    disputes = Dispute.objects.all().order_by('-created_at')
+    return render(request, 'admin_custom/disputes.html', {'disputes': disputes})
+
+@login_required
+@admin_required
+def update_dispute_status(request, dispute_id):
+    if request.method == 'POST':
+        status = request.POST.get('status')
+        dispute = Dispute.objects.get(id=dispute_id)
+        dispute.status = status
+        dispute.save()
+        messages.success(request, f"Dispute status updated to {dispute.get_status_display()}.")
+    return redirect('admin_custom:handle_disputes')

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from apps.products.models import Product
-from .models import Order, CustomOrder
+from .models import Order, CustomOrder, Dispute
 
 def cart_view(request):
     cart = request.session.get('cart', {})
@@ -129,3 +129,21 @@ def artisan_custom_requests_view(request):
         return redirect('products:home')
     requests = CustomOrder.objects.filter(status='requested')
     return render(request, 'orders/artisan_custom_requests.html', {'requests': requests})
+
+@login_required
+def report_dispute(request, order_id):
+    order = get_object_or_404(Order, order_id=order_id, user=request.user)
+    if request.method == 'POST':
+        subject = request.POST.get('subject')
+        description = request.POST.get('description')
+        Dispute.objects.create(
+            order=order,
+            user=request.user,
+            subject=subject,
+            description=description
+        )
+        from django.contrib import messages
+        messages.success(request, "Your dispute has been reported to the administrator. We will review it shortly.")
+        return redirect('orders:tracking')
+    
+    return render(request, 'orders/report_dispute.html', {'order': order})

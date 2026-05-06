@@ -14,4 +14,5 @@ urlpatterns = [
     path('orders/', views.view_orders, name='view_orders'),
     path('analytics/', views.sales_analytics, name='sales_analytics'),
     path('disputes/', views.handle_disputes, name='handle_disputes'),
+    path('disputes/update/<int:dispute_id>/', views.update_dispute_status, name='update_dispute_status'),
 ]
