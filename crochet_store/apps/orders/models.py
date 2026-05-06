@@ -38,8 +38,10 @@ class Order(models.Model):
         ('pending', 'Pending'),
         ('accepted', 'Accepted'),
         ('in_progress', 'In Progress'),
-        ('completed', 'Completed'),
+        ('ready_to_dispatch', 'Ready to Dispatch'),
+        ('dispatched', 'Dispatched'),
         ('shipped', 'Shipped'),
+        ('reached_near', 'Reached Near'),
         ('delivered', 'Delivered'),
         ('cancelled', 'Cancelled'),
     )
@@ -74,3 +76,22 @@ class Invoice(models.Model):
 
     def __str__(self):
         return f"Invoice for {self.order.order_id}"
+
+class Dispute(models.Model):
+    STATUS_CHOICES = (
+        ('pending', 'Pending Review'),
+        ('investigating', 'Investigating'),
+        ('resolved', 'Resolved'),
+        ('rejected', 'Rejected'),
+    )
+    
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='disputes')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    subject = models.CharField(max_length=255)
+    description = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Dispute by {self.user.username} for Order {self.order.order_id}"

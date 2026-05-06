@@ -56,7 +56,7 @@
                             </div>
                             {% if c_order.status == 'priced' %}
                                 <div>
-                                    <span class="me-3 fw-bold">Price: ₹{{ c_order.customization_price }}</span>
+                                    <span class="me-3 fw-bold">Price: ₹{{ c_order.total_price }}</span>
                                     <button class="btn btn-sm btn-success">Confirm Order</button>
                                 </div>
                             {% endif %}
