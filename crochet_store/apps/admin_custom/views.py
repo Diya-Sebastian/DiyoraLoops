@@ -86,8 +86,39 @@ def approve_sellers(request):
 @login_required
 @admin_required
 def manage_products(request):
-    products = Product.objects.all()
+    products = Product.objects.all().order_by('-created_at')
     return render(request, 'admin_custom/manage_products.html', {'products': products})
+
+@login_required
+@admin_required
+def edit_product(request, product_id):
+    from django.shortcuts import get_object_or_404
+    product = get_object_or_404(Product, product_id=product_id)
+    if request.method == 'POST':
+        product.name = request.POST.get('name')
+        product.price = request.POST.get('price')
+        product.category = request.POST.get('category')
+        product.description = request.POST.get('description')
+        if 'image' in request.FILES:
+            product.image = request.FILES['image']
+        product.save()
+        messages.success(request, f"Product '{product.name}' updated successfully.")
+        return redirect('admin_custom:manage_products')
+    
+    return render(request, 'admin_custom/edit_product.html', {
+        'product': product,
+        'categories': Product.CATEGORY_CHOICES
+    })
+
+@login_required
+@admin_required
+def delete_product(request, product_id):
+    from django.shortcuts import get_object_or_404
+    product = get_object_or_404(Product, product_id=product_id)
+    name = product.name
+    product.delete()
+    messages.success(request, f"Product '{name}' has been deleted.")
+    return redirect('admin_custom:manage_products')
 
 @login_required
 @admin_required
