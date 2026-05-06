@@ -1,0 +1,28 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.AWS_IP }}
+        username: ubuntu
+        key: ${{ secrets.AWS_SSH_KEY }}
+        script: |
+          cd /home/ubuntu/diyora_loops
+          git pull origin main
+          source venv/bin/activate
+          cd crochet_store
+          pip install -r requirements.txt
+          python3 manage.py migrate
+          python3 manage.py collectstatic --noinput
+          sudo pkill -HUP gunicorn || sudo systemctl restart gunicorn
