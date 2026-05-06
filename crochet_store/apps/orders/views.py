@@ -132,12 +132,21 @@ def artisan_custom_requests_view(request):
 
 @login_required
 def report_dispute(request, order_id):
-    order = get_object_or_404(Order, order_id=order_id, user=request.user)
+    order = Order.objects.filter(order_id=order_id, user=request.user).first()
+    custom_order = None
+    
+    if not order:
+        custom_order = CustomOrder.objects.filter(order_id=order_id, user_id=request.user).first()
+        if not custom_order:
+            from django.http import Http404
+            raise Http404("Order not found.")
+    
     if request.method == 'POST':
         subject = request.POST.get('subject')
         description = request.POST.get('description')
         Dispute.objects.create(
             order=order,
+            custom_order=custom_order,
             user=request.user,
             subject=subject,
             description=description
@@ -146,4 +155,15 @@ def report_dispute(request, order_id):
         messages.success(request, "Your dispute has been reported to the administrator. We will review it shortly.")
         return redirect('orders:tracking')
     
-    return render(request, 'orders/report_dispute.html', {'order': order})
+    display_order = order if order else custom_order
+    return render(request, 'orders/report_dispute.html', {'order': display_order})
+
+@login_required
+def accept_custom_price(request, order_id):
+    order = get_object_or_404(CustomOrder, order_id=order_id, user_id=request.user)
+    if order.status == 'priced':
+        order.status = 'accepted'
+        order.save()
+        from django.contrib import messages
+        messages.success(request, "Order confirmed! The artisan will start working on your request.")
+    return redirect('orders:tracking')

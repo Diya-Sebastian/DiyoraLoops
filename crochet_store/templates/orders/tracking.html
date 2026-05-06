@@ -60,7 +60,7 @@
                             {% if c_order.status == 'priced' %}
                                 <div>
                                     <span class="me-3 fw-bold">Price: ₹{{ c_order.total_price }}</span>
-                                    <button class="btn btn-sm btn-success">Confirm Order</button>
+                                    <a href="{% url 'orders:accept_custom_price' c_order.order_id %}" class="btn btn-sm btn-success">Confirm Order</a>
                                 </div>
                             {% endif %}
                         </div>

@@ -13,6 +13,7 @@ urlpatterns = [
     path('custom-order/', views.custom_order_request_view, name='custom_order_request'),
     path('tracking/', views.order_tracking_view, name='tracking'),
     path('report-dispute/<uuid:order_id>/', views.report_dispute, name='report_dispute'),
+    path('accept-price/<uuid:order_id>/', views.accept_custom_price, name='accept_custom_price'),
     
     # Artisan paths
     path('artisan/dashboard/', views.artisan_dashboard_view, name='artisan_dashboard'),

@@ -22,7 +22,15 @@
                 <tr>
                     <td class="px-4"><small class="text-muted">{{ dispute.created_at|date:"M d, Y" }}</small></td>
                     <td><strong>{{ dispute.user.username }}</strong></td>
-                    <td><small>#{{ dispute.order.order_id|stringformat:".8s" }}</small></td>
+                    <td>
+                        <small>
+                            {% if dispute.order %}
+                                #{{ dispute.order.order_id|stringformat:".8s" }}
+                            {% else %}
+                                #{{ dispute.custom_order.order_id|stringformat:".8s" }} (Custom)
+                            {% endif %}
+                        </small>
+                    </td>
                     <td><span class="badge bg-danger-subtle text-danger">{{ dispute.subject }}</span></td>
                     <td>
                         <span class="badge rounded-pill bg-{{ dispute.status|yesno:'info,secondary,success,danger' }}">

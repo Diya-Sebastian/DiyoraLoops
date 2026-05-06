@@ -85,7 +85,8 @@ class Dispute(models.Model):
         ('rejected', 'Rejected'),
     )
     
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='disputes')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='disputes', null=True, blank=True)
+    custom_order = models.ForeignKey(CustomOrder, on_delete=models.CASCADE, related_name='disputes', null=True, blank=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     subject = models.CharField(max_length=255)
     description = models.TextField()
