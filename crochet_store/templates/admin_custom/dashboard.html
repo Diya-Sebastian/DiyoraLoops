@@ -119,9 +119,33 @@
                 </div>
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item px-0 py-3"><i class="fas fa-user-plus text-primary me-3"></i>New user registered: Diya</li>
-                        <li class="list-group-item px-0 py-3"><i class="fas fa-shopping-bag text-success me-3"></i>New order #ORD-9992</li>
-                        <li class="list-group-item px-0 py-3"><i class="fas fa-check-circle text-info me-3"></i>Seller "CraftyHands" approved</li>
+                        {% for user in recent_users %}
+                        <li class="list-group-item px-0 py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-user-plus text-primary me-3"></i>
+                                    New user registered: <strong>{{ user.username }}</strong> ({{ user.role }})
+                                </div>
+                                <span class="text-muted small">{{ user.date_joined|timesince }} ago</span>
+                            </div>
+                        </li>
+                        {% endfor %}
+                        
+                        {% for order in recent_orders %}
+                        <li class="list-group-item px-0 py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-shopping-bag text-success me-3"></i>
+                                    New order <strong>#{{ order.order_id|slice:":8" }}</strong> by {{ order.user.username }}
+                                </div>
+                                <span class="text-muted small">{{ order.created_at|timesince }} ago</span>
+                            </div>
+                        </li>
+                        {% endfor %}
+
+                        {% if not recent_users and not recent_orders %}
+                        <li class="list-group-item px-0 py-3 text-center text-muted">No recent activity found.</li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

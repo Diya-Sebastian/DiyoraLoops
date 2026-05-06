@@ -23,11 +23,17 @@ def dashboard(request):
     total_orders = Order.objects.count()
     total_revenue = Order.objects.exclude(status='cancelled').aggregate(Sum('total_amount'))['total_amount__sum'] or 0
     
+    # Real Activity Data
+    recent_users = User.objects.order_by('-date_joined')[:5]
+    recent_orders = Order.objects.order_by('-created_at')[:5]
+    
     context = {
         'total_users': total_users,
         'total_products': total_products,
         'total_orders': total_orders,
         'total_revenue': total_revenue,
+        'recent_users': recent_users,
+        'recent_orders': recent_orders,
     }
     return render(request, 'admin_custom/dashboard.html', context)
 
