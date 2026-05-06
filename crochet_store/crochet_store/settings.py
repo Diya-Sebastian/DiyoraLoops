@@ -63,6 +63,11 @@ DATABASES = {
         'PASSWORD': 'admin*#diyoraloops',
         'HOST': 'diyora-loops-db.clu8ao64c3fc.ap-south-2.rds.amazonaws.com',
         'PORT': '3306',
+        'OPTIONS': {
+            'ssl': {
+                'ca': '/home/ubuntu/diyora_loops/crochet_store/global-bundle.pem',
+            },
+        },
     }
 }
 
