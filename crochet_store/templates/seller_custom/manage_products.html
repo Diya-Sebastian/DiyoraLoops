@@ -22,8 +22,8 @@
                 <p class="card-text text-muted mb-1"><strong>Price:</strong> ₹{{ p.price }}</p>
                 <p class="card-text text-muted mb-3"><strong>Category:</strong> {{ p.get_category_display }}</p>
                 <div class="d-flex justify-content-between border-top pt-3">
-                    <a href="{% url 'seller_custom:edit_product' p.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
-                    <a href="{% url 'seller_custom:delete_product' p.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                    <a href="{% url 'seller_custom:edit_product' p.product_id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                    <a href="{% url 'seller_custom:delete_product' p.product_id %}" class="btn btn-sm btn-outline-danger">Delete</a>
                 </div>
             </div>
         </div>
