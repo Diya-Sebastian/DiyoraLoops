@@ -6,7 +6,11 @@
         <h1 class="display-4 fw-bold text-dark mb-4">Handmade With Love</h1>
         <p class="lead text-muted mb-4">Discover our collection of beautiful crochet gifts or request a custom design.</p>
         <a href="{% url 'products:product_list' %}" class="btn btn-primary btn-lg px-4 me-md-2">Shop Now</a>
-        <a href="{% url 'orders:custom_order_request' %}" class="btn btn-outline-primary btn-lg px-4">Custom Order</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'orders:custom_order_request' %}" class="btn btn-outline-primary btn-lg px-4">Custom Order</a>
+        {% else %}
+            <a href="{% url 'users:login' %}" class="btn btn-outline-primary btn-lg px-4">Login to Request Custom Order</a>
+        {% endif %}
     </div>
 </div>
 

@@ -17,7 +17,7 @@
                 <h5 class="card-title fw-bold text-primary">{{ p.name }}</h5>
                 <p class="card-text text-muted mb-1"><strong>Price:</strong> ₹{{ p.price }}</p>
                 <p class="card-text text-muted mb-1"><strong>Category:</strong> {{ p.get_category_display }}</p>
-                <p class="card-text text-muted small"><strong>Seller:</strong> {{ p.seller.username }}</p>
+                <p class="card-text text-muted small"><strong>Seller:</strong> {{ p.created_by.username }}</p>
             </div>
         </div>
     </div>
