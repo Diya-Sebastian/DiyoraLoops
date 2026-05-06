@@ -100,3 +100,27 @@ def custom_requests(request):
     # Show requests assigned to them OR unassigned requests
     requests = CustomOrder.objects.filter(Q(artisan=request.user) | Q(artisan__isnull=True)).order_by('-created_at')
     return render(request, 'seller_custom/custom_requests.html', {'custom_orders': requests})
+
+@login_required
+@seller_required
+def edit_product(request, pk):
+    product = get_object_or_404(Product, pk=pk, created_by=request.user)
+    if request.method == 'POST':
+        form = SellerProductForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Product '{product.name}' updated successfully!")
+            return redirect('seller_custom:manage_products')
+    else:
+        form = SellerProductForm(instance=product)
+    return render(request, 'seller_custom/add_product.html', {'form': form, 'edit_mode': True})
+
+@login_required
+@seller_required
+def delete_product(request, pk):
+    product = get_object_or_404(Product, pk=pk, created_by=request.user)
+    if request.method == 'POST':
+        product.delete()
+        messages.success(request, "Product deleted successfully.")
+        return redirect('seller_custom:manage_products')
+    return render(request, 'seller_custom/delete_product_confirm.html', {'product': product})
