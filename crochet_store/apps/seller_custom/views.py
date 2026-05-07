@@ -18,7 +18,7 @@ def seller_required(view_func):
 @seller_required
 def dashboard(request):
     products_count = Product.objects.filter(created_by=request.user).count()
-    # Placeholder for actual order logic
+    # Placeholder for actual order logic is added
     orders_count = 0 
     custom_requests_count = CustomOrder.objects.filter(artisan=request.user).count()
     
