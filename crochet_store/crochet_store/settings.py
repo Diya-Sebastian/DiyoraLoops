@@ -5,9 +5,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-dummy-secret-key-change-in-prod'
 
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['16.112.129.193', 'localhost', '127.0.0.1', '*']
+ALLOWED_HOSTS = ['16.112.129.193', 'diyoraloops.com', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -87,6 +87,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -104,3 +105,4 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760
 # Authentication Redirects
 LOGIN_URL = 'users:login'
 LOGOUT_REDIRECT_URL = 'users:login'
+LOGIN_REDIRECT_URL = 'products:home'
