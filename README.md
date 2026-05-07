@@ -1,64 +1,96 @@
-# DiyoraLoops - Crochet Store Management System
+# 🧶 DiyoraLoops: A Premium Crochet Marketplace
 
-A full-stack, comprehensive web application built with Django, tailored for a crochet business. It features role-based authentication with three distinct modules: Admin, Seller, and Customer, each paired with their own dedicated dashboards.
+DiyoraLoops is a production-ready, full-stack e-commerce platform specifically designed for crochet artisans and enthusiasts. It bridges the gap between skilled creators and customers through a specialized custom-order workflow, real-time tracking, and role-based management.
 
-## Features
-- **Admin Module:** Business overview, revenue tracking, user management, order processing, category, and catalog management.
-- **Seller Module:** Inventory management, product listing (CRUD), and personal order tracking.
-- **Customer Module:** E-commerce shop, cart functionality, checkout processing, and profile/order history viewing.
-- **Premium Design System:** A completely custom, vanilla CSS glassmorphism UI replacing standard Bootstrap/Tailwind.
+---
 
-## Requirements
-- Python 3.9+
-- MySQL Server (optional for out-of-the-box run, strongly recommended for production)
-- See `requirements.txt`
+## 🚀 Live Demo
+**URL**: [http://16.112.129.193](http://16.112.129.193)  
+*(Note: Replace with your final domain name once DNS propagation is complete)*
 
-## MySQL Setup Instructions
+---
 
-By default, the application is configured to use `sqlite3` for immediate testing and verification without needing a database server right away.
-To switch to MySQL as requested:
+## ✨ Key Features
 
-1. Create a MySQL database locally:
-   ```sql
-   CREATE DATABASE diyoraloops_db;
-   ```
-2. Open `diyoraloops/settings.py`.
-3. Locate the `DATABASES` setting and comment out the sqlite3 configuration.
-4. Uncomment the MySQL configuration:
-   ```python
-   import pymysql
-   pymysql.install_as_MySQLdb()
-   
-   DATABASES = {
-       'default': {
-           'ENGINE': 'django.db.backends.mysql',
-           'NAME': 'diyoraloops_db',
-           'USER': 'root',
-           'PASSWORD': 'YOUR_MYSQL_PASSWORD', # Update this
-           'HOST': 'localhost',
-           'PORT': '3306',
-       }
-   }
-   ```
-5. Apply migrations to the new database:
+### 👤 User Roles
+- **Customers**: Browse products, manage carts, request custom crochet designs, track orders in real-time, and report disputes.
+- **Artisans (Sellers)**: Manage product inventory (CRUD), provide price quotes for custom requests, and update order fulfillment statuses.
+- **Administrators**: Verify sellers, monitor platform analytics, manage user accounts, and resolve disputes.
+
+### 🛠 Core Functionalities
+- **Custom Order Pipeline**: A unique 7-stage workflow (Requested -> Priced -> Accepted -> In Progress -> Ready -> Shipped -> Delivered).
+- **Admin Analytics**: Visual dashboards using Chart.js to track revenue and user growth.
+- **Dispute Resolution**: Integrated feedback loop for customer satisfaction and quality control.
+- **Responsive Design**: Modern, mobile-first UI with a curated "Blue & Pink" aesthetic.
+
+---
+
+## 💻 Tech Stack
+
+- **Backend**: Python 3.x, Django 6.0
+- **Database**: AWS RDS (MySQL)
+- **Frontend**: Bootstrap 5, JavaScript, Vanilla CSS
+- **Infrastructure**: AWS EC2 (Ubuntu 24.04), Nginx, Gunicorn
+- **CI/CD**: GitHub Actions (Automated Deployment)
+- **Security**: SSL/TLS (Let's Encrypt), Role-Based Access Control (RBAC)
+
+---
+
+## 📂 Project Structure
+
+```text
+DiyoraLoops/
+├── apps/
+│   ├── users/          # Authentication & Role Management
+│   ├── products/       # Product CRUD & Catalog
+│   ├── orders/         # Cart, Checkout, Custom Requests & Disputes
+│   ├── admin_custom/   # Admin Dashboards & Analytics
+│   └── seller_custom/  # Artisan Dashboard & Order Fulfillment
+├── crochet_store/      # Main Project Configuration
+├── static/             # CSS, JS, and Image Assets
+├── templates/          # HTML Templates (MVT)
+└── manage.py           # Django Management Script
+```
+
+---
+
+## 🛠 Installation & Local Setup
+
+1. **Clone the repository**:
    ```bash
+   git clone https://github.com/your-username/DiyoraLoops.git
+   cd DiyoraLoops
+   ```
+
+2. **Create a virtual environment**:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Database Migrations**:
+   ```bash
+   python manage.py makemigrations
    python manage.py migrate
    ```
 
-## Demo Data Installation
-To immediately populate Categories, Products, and Users (Admin, Seller, Customer), run the custom management command we have provided:
+5. **Run the server**:
+   ```bash
+   python manage.py runserver
+   ```
 
-```bash
-python manage.py load_demo_data
-```
+---
 
-**Demo Accounts Created:**
-- Admin: `admin` / `adminpass`
-- Seller: `seller` / `sellerpass`
-- Customer: `customer` / `customerpass`
+## 🛡 License
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Running the Server
-```bash
-python manage.py runserver
-```
-Visit `http://127.0.0.1:8000`
+---
+
+## 👨‍💻 Author
+**Diya Sebastian**  
+*Full Stack Developer & Crochet Enthusiast*
