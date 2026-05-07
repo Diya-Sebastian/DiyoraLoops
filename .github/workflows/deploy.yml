@@ -28,5 +28,8 @@ jobs:
           pip install django mysqlclient pillow razorpay reportlab
           python3 manage.py migrate
           python3 manage.py collectstatic --noinput
-          # Restart Gunicorn gracefully (don't fail if service not found)
-          sudo systemctl restart gunicorn || sudo pkill -HUP gunicorn || echo "Gunicorn restart handled manually"
+          # Debugging: List services and processes
+          ls /etc/systemd/system/ | grep gunicorn || echo "No gunicorn service found in systemd"
+          ps aux | grep gunicorn
+          # Restart Gunicorn gracefully
+          sudo systemctl restart gunicorn || sudo pkill -HUP gunicorn || echo "Manual restart needed"
