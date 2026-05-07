@@ -6,7 +6,7 @@ DiyoraLoops is a production-ready, full-stack e-commerce platform specifically d
 
 ## 🚀 Live Demo
 **URL**: [http://16.112.129.193](http://16.112.129.193)  
-*(Note: Replace with your final domain name once DNS propagation is complete)*
+
 
 ---
 
